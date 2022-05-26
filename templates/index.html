@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/@trevoreyre/autocomplete-js/dist/style.css" />
+    <title>AutoComplete</title>
+</head>
+
+<body>
+    <div id="autocomplete" class="autocomplete" style="width:300px; margin:400px auto;">
+        <input class="autocomplete-input" />
+        <ul id="ull" class="autocomplete-result-list" style="color:red;"></ul>
+    </div>
+</body>
+<script src="https://unpkg.com/@trevoreyre/autocomplete-js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+    var name; // global variable that keeps the name
+    new Autocomplete('#autocomplete', {
+        search: input => {
+            const url = `/search/?name=${input}`;
+            return new Promise(resolve => {
+                fetch(url).then(response => response.json()).then(data => {
+                    resolve(data.name);
+                })
+            })
+        },
+
+        onSubmit: result => {
+            name = result; //pass clicked result to global
+        }
+    })
+    $('#ull').click(function (e) {
+        $.ajax({
+            url: '',
+            type: 'GET',
+            data: {
+                valname: name,
+            },
+            success: function (response) {
+                window.location = response.urlLink;
+            }
+        })
+
+    })
+</script>
+
+</html>
